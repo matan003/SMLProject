@@ -47,7 +47,7 @@
 
 
 \author{%
-  David S.~Hippocampus\thanks{Use footnote for providing further information
+  David S.~Hippocampu\thanks{Use footnote for providing further information
     about author (webpage, alternative address)---\emph{not} for acknowledging
     funding agencies.} \\
   Department of Computer Science\\
@@ -55,7 +55,6 @@
   Pittsburgh, PA 15213 \\
   \texttt{hippo@cs.cranberry-lemon.edu} \\
   % examples of more authors
-  % \And
   % Coauthor \\
   % Affiliation \\
   % Address \\
@@ -77,6 +76,29 @@
   % \texttt{email} \\
 }
 
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+backgroundcolor=\color{backcolour},
+commentstyle=\color{codegreen},
+keywordstyle=\color{magenta},
+numberstyle=\tiny\color{codegray},
+stringstyle=\color{codepurple},
+basicstyle=\footnotesize\ttfamily,
+breakatwhitespace=false,
+breaklines=true, captionpos=b,
+keepspaces=true, numbers=left,
+numbersep=5pt, showspaces=false,
+showstringspaces=false,
+showtabs=false, tabsize=2,
+}
+\lstset{style=mystyle}
+
+
 
 \begin{document}
 
@@ -85,11 +107,7 @@
 
 
 \begin{abstract}
-  The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
-  both the left- and right-hand margins. Use 10~point type, with a vertical
-  spacing (leading) of 11~points.  The word \textbf{Abstract} must be centered,
-  bold, and in point size 12. Two line spaces precede the abstract. The abstract
-  must be limited to one paragraph.
+   Using statistical methods and reasoning to come up with an appropriate machine learning model for predicting bike demand in an urban environment. TODO: Better abstract
 \end{abstract}
 
 
@@ -196,16 +214,20 @@ Please pay special attention to the instructions in Section \ref{others}
 regarding figures, tables, acknowledgments, and references.
 
 
-\section{Headings: first level}
+\section{Data analysis task}
 \label{headings}
 
+\begin{enumerate}
+\item Which are the numerical features and which are the categorical features? 
+\end{enumerate}
 
-All headings should be lower case (except for first word and proper nouns),
-flush left, and bold.
+The numerical features are the inputs, associate to X. The Data set have sixteen 
+    
+The categorical features is the output, associate to y.
 
-
-First-level headings should be in 12-point type.
-
+ \begin{itemize}
+        \item 
+    \end{itemize}
 
 \subsection{Headings: second level}
 
