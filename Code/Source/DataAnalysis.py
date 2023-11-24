@@ -1,0 +1,25 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 3i) The categorical features are hour_of_day, day_of_week, month, holiday, weekday, increase_stock.
+# The numerical features are the complement of that.
+
+# 3ii)
+
+data = pd.read_csv('../Data/training_data.csv')
+
+# Display the first few rows of the dataset
+print(data.head())
+
+# Get a concise summary of the dataset
+print(data.info())
+
+# Get basic statistical details
+print(data.describe(include='all'))
+
+# Hourly trend of bicycles. Saved in ('../Plots/hour_against_increase_stock.png')
+
+sns.countplot(x = 'hour_of_day', hue = 'increase_stock', data = data)
+plt.show()
+
