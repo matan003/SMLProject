@@ -20,6 +20,16 @@ print(data.describe(include='all'))
 
 # Hourly trend of bicycles. Saved in ('../Plots/hour_against_increase_stock.png')
 
-sns.countplot(x = 'hour_of_day', hue = 'increase_stock', data = data)
-plt.show()
+#sns.countplot(x = 'hour_of_day', hue = 'increase_stock', data = data)
+#plt.show()
+
+# Daily trend of bicycles. Saved in ('../Plots/day_of_week_against_increase_stock')
+
+#sns.countplot(x = 'day_of_week', hue = 'increase_stock', data = data)
+#plt.show()
+
+# Monthly trend of bicycles. Saved in ('../Plots/month_against_increase_stock')
+
+#sns.countplot(x = 'month', hue = 'increase_stock', data = data)
+#plt.show()
 
