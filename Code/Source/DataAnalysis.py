@@ -33,3 +33,9 @@ print(data.describe(include='all'))
 #sns.countplot(x = 'month', hue = 'increase_stock', data = data)
 #plt.show()
 
+# FEATURE ENGINEERING
+filtered_data = data[~data['day_of_week'].isin([0, 4])]
+sns.countplot(x = 'hour_of_day', hue = 'increase_stock', data = filtered_data)
+plt.show()
+
+
