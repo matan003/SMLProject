@@ -22,7 +22,24 @@
 % to avoid loading the natbib package, add option nonatbib:
 %    \usepackage[nonatbib]{neurips_2022}
 
-
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{xcolor}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usetikzlibrary{shapes, shadows, arrows}
+\usepackage{acronym}
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
@@ -111,123 +128,93 @@ showtabs=false, tabsize=2,
 \end{abstract}
 
 
-\section{Submission of papers to NeurIPS 2022}
-
-
-Please read the instructions below carefully and follow them faithfully.
-
-
-\subsection{Style}
-
-
-Papers to be submitted to NeurIPS 2022 must be prepared according to the
-instructions presented here. Papers may only be up to {\bf nine} pages long,
-including figures. Additional pages \emph{containing only acknowledgments and
-references} are allowed. Papers that exceed the page limit will not be
-reviewed, or in any other way considered for presentation at the conference.
-
-
-The margins in 2022 are the same as those in 2007, which allow for $\sim$$15\%$
-more words in the paper compared to earlier years.
-
-
-Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
-NeurIPS website as indicated below. Please make sure you use the current files
-and not previous versions. Tweaking the style files may be grounds for
-rejection.
-
-
-\subsection{Retrieval of style files}
-
-
-The style files for NeurIPS and other conference information are available on
-the World Wide Web at
-\begin{center}
-  \url{http://www.neurips.cc/}
-\end{center}
-The file \verb+neurips_2022.pdf+ contains these instructions and illustrates the
-various formatting requirements your NeurIPS paper must satisfy.
-
-
-The only supported style file for NeurIPS 2022 is \verb+neurips_2022.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{} 2.09,
-  Microsoft Word, and RTF are no longer supported!}
-
-
-The \LaTeX{} style file contains three optional arguments: \verb+final+, which
-creates a camera-ready copy, \verb+preprint+, which creates a preprint for
-submission to, e.g., arXiv, and \verb+nonatbib+, which will not load the
-\verb+natbib+ package for you in case of package clash.
-
-
-\paragraph{Preprint option}
-If you wish to post a preprint of your work online, e.g., on arXiv, using the
-NeurIPS style, please use the \verb+preprint+ option. This will create a
-nonanonymized version of your work with the text ``Preprint. Work in progress.''
-in the footer. This version may be distributed as you see fit. Please \textbf{do
-  not} use the \verb+final+ option, which should \textbf{only} be used for
-papers accepted to NeurIPS.
-
-
-At submission time, please omit the \verb+final+ and \verb+preprint+
-options. This will anonymize your submission and add line numbers to aid
-review. Please do \emph{not} refer to these line numbers in your paper as they
-will be removed during generation of camera-ready copies.
-
-
-The file \verb+neurips_2022.tex+ may be used as a ``shell'' for writing your
-paper. All you have to do is replace the author, title, abstract, and text of
-the paper with your own.
-
-
-The formatting instructions contained in these style files are summarized in
-Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
-
-
-\section{General formatting instructions}
-\label{gen_inst}
-
-
-The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
-type with a vertical spacing (leading) of 11~points.  Times New Roman is the
-preferred typeface throughout, and will be selected for you by default.
-Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
-indentation.
-
-
-The paper title should be 17~point, initial caps/lower case, bold, centered
-between two horizontal rules. The top rule should be 4~points thick and the
-bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
-below the title to rules. All pages should start at 1~inch (6~picas) from the
-top of the page.
-
-
-For the final version, authors' names are set in boldface, and each name is
-centered above the corresponding address. The lead author's name is to be listed
-first (left-most), and the co-authors' names (if different address) are set to
-follow. If there is only one co-author, list both author and co-author side by
-side.
-
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
 
 \section{Data analysis task}
 \label{headings}
 
+It is important to evaluate the different types of data in order to do the correct data analysis. The dataset presents three different types of data: numerical variables, categorical variables and, binary ad ordinal variables. Each of the types mentioned should be treated differently.
+
 \begin{enumerate}
 \item Which are the numerical features and which are the categorical features? 
-\end{enumerate}
 
-The numerical features are the features which have an inherent ordering...
+The dataset was separated between numerical features, categorical features, and also binary and ordinal features.
+The numerical features are the features which have an inherent ordering. It can be separated in continuous variables and discrete variables. The numeral features can be seen bellow:
 
-The categorical features are those for which there is no inherent ordering. In this case it is increase_stock, hour...
+\begin{equation}
+temp, dew, humidity, precip, snow, snowdepth, windspeed,
+cloudcover, visibility
+\label{eq:1}
+\end{equation}
 
- \begin{itemize}
-        \item 
-    \end{itemize}
+The continuous variables are ideal for histograms because they can take on an infinite number of values within a range. The discrete variables are often more appropriate for bar charts. The graphs that shows the relation between probability density and each one of the numerical features can be seen in Figure \ref{fig:1}, \ref{fig:2} and \ref{fig:3}.
+
+\begin{figure}[htb!]
+\caption{Numerical features - temp, dew, humidity.}
+\label{fig:1}
+    
+\subfloat[\label{P1}temperature]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_temp.png}
+    }\hfill
+     \subfloat[\label{P2}dew]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_dew.png}
+    } \hfill
+        \subfloat[\label{P3}humidity]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_humidity.png}
+     }
+\end{figure}
+
+\begin{figure}[htb!]
+\caption{Numerical features - precip, windspeed, snowdepth.}
+\label{fig:2}
+    
+\subfloat[\label{P4}precipitation]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_precip.png}
+    }\hfill
+     \subfloat[\label{P5}windspeed]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_windspeed.png}
+    } \hfill
+        \subfloat[\label{P6}snowdepth]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_snowdepth.png}
+     }
+\end{figure}
+
+\begin{figure}[htb!]
+\caption{Numerical features - cloudcover, visibility.}
+\label{fig:3}
+    
+\subfloat[\label{P7}cloudcover]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_cloudcover.png}
+    } \hfill
+        \subfloat[\label{P8}visibility]{
+        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_visibility.png}
+     }
+\end{figure}
+   
+
+
+In the categorical features there is no inherent ordering.  For this case, it can be seen bellow:
+
+\begin{equation}
+increase \textunderscore stock
+\label{eq:2}
+\end{equation}
+
+Histograms are not typically used for categorical variables since these variables represent categories that do not have an intrinsic order. Bar charts are more suitable for representing categorical data.
+
+The binary and ordinal features can be seen bellow:
+
+\begin{equation}
+hour \textunderscore of \textunderscore day, day \textunderscore of \textunderscore week, month, holiday, weekday, summertime
+\label{eq:3}
+\end{equation}
+
+The binary features are only two categories, for example, Yes/No or True/False. Histograms are not usually used for binary variables because there are only two bars to display, which does not convey much information about distribution. Instead, a bar chart or pie chart might be used.
+
+The ordinal features have a set order, for example, poor to excelent, but the intervals between the categories are not necessarily equal. Histograms can be used with ordinal data; however, the ordered nature of the data must be preserved in the bins of the histogram, and often a bar chart is clearer.
+
+\item Is there a greater trend to need an increase in the availability of bicycles?
+Plotting the weekdays against the increase stock feature shows an increase in demand for bicycles during the rush-hour windows six to nine in the morning and three to seven in the afternoon. This is illustrated in figure \ref{fig:}
+    \end{enumerate}
 
 \subsection{Headings: second level}
 
