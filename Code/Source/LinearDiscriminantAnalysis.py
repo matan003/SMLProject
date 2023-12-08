@@ -27,21 +27,21 @@ y_pred = lda_model.predict(X)
 training_accuracy = accuracy_score(y, y_pred)
 print("Training Accuracy: ", training_accuracy)
 
-kfold = KFold(n_splits = 5, random_state = 42, shuffle = True)
+kfold = KFold(n_splits = 1600, random_state = 42)
 
 scores = cross_val_score(lda_model, X, y, cv = kfold)
 
 print("Accuracy scores for each fold: ", scores)
 print("Average cross-validation score: ", np.mean(scores))
 
-# Exhaustive feature selection
+#Exhaustive feature selection TOO COMPUTATIONALLY EXPENSIVE
 
-lda = LinearDiscriminantAnalysis()
-kf = KFold(n_splits = 2, random_state = 42, shuffle = True)
+#lda = LinearDiscriminantAnalysis()
+#kf = KFold(n_splits = 2, random_state = 42)
 
 #efs = EFS(lda,
 #          min_features = 2,
-#          max_features = 5,
+#          max_features = 16,
 #          scoring = 'accuracy',
 #          print_progress = True,
 #          cv = kf
