@@ -51,7 +51,7 @@
 \usepackage{xcolor}         % colors
 
 
-\title{Formatting Instructions For NeurIPS 2022}
+\title{Do we need more bikes? Project in Machine Learning}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -124,10 +124,16 @@ showtabs=false, tabsize=2,
 
 
 \begin{abstract}
-   Using statistical methods and reasoning to come up with an appropriate machine learning model for predicting bike demand in an urban environment. TODO: Better abstract
+   This documents contains the analysis base on the provided data in order to solve the District Department of Transportation in Washington D.C. problem using statistical methods and reasoning to come up with an appropriate machine learning model for predicting the bike demand. The following models were implemented: Logistic Regression, Discriminant analysis (LDA and QDA), K-nearest neighbor, Tree-based methods (classification trees, random forests, bagging) and Boosting (adaptative and gradient). The goal is to find the most suitable model to predict the given problem.
+
 \end{abstract}
 
+\section{Introduction}
 
+This report presents our findings of our project for the Statistical Machine Learning course, 1RT700 at Uppsala University, which intersects the domains of machine learning and urban planning.
+We were presented with a sample dataset consisting of 1600 data points. The data points themselves consisted of 15 features, both categorical and numerical, as well as one categorical feature to predict.
+The goal of the project was to predict if there was a need to increase supply of bikes, or not. The categorical feature we predicted for could have the value high\_demand or low\_demand, consequently making this a classification problem.
+Our challenge was to dissect the data, figure out what preprocessing would make sense for the task at hand, and then use various machine learning models and methods taught in the course, to then predict the bike demand.
 
 \section{Data analysis task}
 \label{headings}
@@ -137,8 +143,8 @@ It is important to evaluate the different types of data in order to do the corre
 \begin{enumerate}
 \item Which are the numerical features and which are the categorical features? 
 
-The dataset was separated between numerical features, categorical features, and also binary and ordinal features.
-The numerical features are the features which have an inherent ordering. It can be separated in continuous variables and discrete variables. The numeral features can be seen bellow:
+The dataset was separated between numerical features (continuous features and discrete features) and categorical features (nominal and ordinal features).
+The numerical features are the features which have an inherent ordering, based on some quantitative trait. It can be separated in continuous variables and discrete variables as can be see in Figure \ref{fig:numerical}. The numeral features can be seen bellow:
 
 \begin{equation}
 temp, dew, humidity, precip, snow, snowdepth, windspeed,
@@ -146,62 +152,88 @@ cloudcover, visibility
 \label{eq:1}
 \end{equation}
 
-The continuous variables are ideal for histograms because they can take on an infinite number of values within a range. The discrete variables are often more appropriate for bar charts. The graphs that shows the relation between probability density and each one of the numerical features can be seen in Figure \ref{fig:1}, \ref{fig:2} and \ref{fig:3}.
+\begin{figure}[H]
+		\centering
+		\caption{Types of numerical features.}
+		\includegraphics[width=0.5\linewidth]{Report/Images/NumericalData.png}
+	\label{fig:numerical}
+	\end{figure}
 
-\begin{figure}[htb!]
-\caption{Numerical features - temp, dew, humidity.}
-\label{fig:1}
-    
-\subfloat[\label{P1}temperature]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_temp.png}
-    }\hfill
-     \subfloat[\label{P2}dew]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_dew.png}
-    } \hfill
-        \subfloat[\label{P3}humidity]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_humidity.png}
-     }
-\end{figure}
+The continuous features are ideal for histograms because they can take on an infinite number of values within a range. The discrete features are often more appropriate for bar charts. 
 
-\begin{figure}[htb!]
-\caption{Numerical features - precip, windspeed, snowdepth.}
-\label{fig:2}
-    
-\subfloat[\label{P4}precipitation]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_precip.png}
-    }\hfill
-     \subfloat[\label{P5}windspeed]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_windspeed.png}
-    } \hfill
-        \subfloat[\label{P6}snowdepth]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_snowdepth.png}
-     }
-\end{figure}
+%The relation between probability density and the continuous numerical features can be seen in Figure \ref{fig:1} and \ref{fig:2}.
 
-\begin{figure}[htb!]
-\caption{Numerical features - cloudcover, visibility.}
-\label{fig:3}
+%\begin{figure}[htb!]
+%\caption{Numerical features - temp, dew, humidity.}
+%\label{fig:1}
     
-\subfloat[\label{P7}cloudcover]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_cloudcover.png}
-    } \hfill
-        \subfloat[\label{P8}visibility]{
-        \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_visibility.png}
-     }
-\end{figure}
+%\subfloat[\label{P1}temperature]{
+        %\includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_temp.png}
+    %}\hfill
+     %\subfloat[\label{P2}dew]{
+        %\includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_dew.png}
+   %} \hfill
+        %\subfloat[\label{P3}humidity]{
+       % \includegraphics[width=0.3\textwidth]{Code/Plots/probability_density_humidity.png}
+    % }
+     
+%\end{figure}
+
+%\begin{figure}[htb!]
+%\caption{Numerical features - cloudcover and windspeed.}
+%\label{fig:2}
+    
+%\subfloat[\label{P4}cloudcover]{
+       % \includegraphics[width=0.4\textwidth]{Code/Plots%/probability_density_cloudcover.png}
+   % }\hfill
+     %\subfloat[\label{P5}windspeed]{
+       % \includegraphics[width=0.4\textwidth]{Code/Plots/probability_density_windspeed.png}
+    %} 
+     
+%\end{figure}
+
+
+The correlation matrix was created for the numerical features, can be seen in the Figure \ref{fig:4}. It is possible to analyse the correlation coefficient (negative and positive) between the numerical features, it can helps to visualize pattern in the given dataset. It is possible to see the perfect correlation when the same type of feature is compared representing by the main diagonal. If the correlation between two different features is more close to the perfect correlation, means that the influence between it is high.
+
+\begin{figure}[H]
+		\centering
+		\caption{Correlation matrix - numerical features.}
+		\includegraphics[width=0.7\linewidth]{Code/Plots/correlation_matriz.png}
+	\label{fig:4}
+	\end{figure}
+
+
    
 
 
-In the categorical features there is no inherent ordering.  For this case, it can be seen bellow:
+In the categorical features there is no inherent ordering. it is based on some qualitative trait. The categorical features can be nominal or ordinal features as can be seen in Figure \ref{fig:categorical}. In this case, the given output is a categorical feature, and it can be seen bellow:
 
 \begin{equation}
 increase \textunderscore stock
 \label{eq:2}
 \end{equation}
 
-Histograms are not typically used for categorical variables since these variables represent categories that do not have an intrinsic order. Bar charts are more suitable for representing categorical data.
+\begin{figure}[H]
+		\centering
+		\caption{Types of categorical features.}
+		\includegraphics[width=0.7\linewidth]{Report/Images/CategoricalData.png}
+	\label{fig:categorical}
+	\end{figure}
 
-The binary and ordinal features can be seen bellow:
+
+
+ The output of the predictions is a categorical feature in the given dataset as mentioned above. The given data was analysed and it is possible to see in the code that the probability to happen the low \textunderscore bike \textunderscore demand is 82\%, and the probability to happen the high \textunderscore bike \textunderscore demand is 18\%.
+
+ %\begin{figure}[H]
+ %\centering
+%\caption{The categorical feature probability.}
+%\includegraphics[width=0.5\linewidth]{Code/Plots/increase_stock.png}
+%\label{fig:4}
+%\end{figure}
+
+ 
+
+The categorical features that are ordinal and binary features can be seen bellow:
 
 \begin{equation}
 hour \textunderscore of \textunderscore day, day \textunderscore of \textunderscore week, month, holiday, weekday, summertime
@@ -210,255 +242,179 @@ hour \textunderscore of \textunderscore day, day \textunderscore of \textundersc
 
 The binary features are only two categories, for example, Yes/No or True/False. Histograms are not usually used for binary variables because there are only two bars to display, which does not convey much information about distribution. Instead, a bar chart or pie chart might be used.
 
-The ordinal features have a set order, for example, poor to excelent, but the intervals between the categories are not necessarily equal. Histograms can be used with ordinal data; however, the ordered nature of the data must be preserved in the bins of the histogram, and often a bar chart is clearer.
+The ordinal features have a set order, for example, poor to excellent, but the intervals between the categories are not necessarily equal. Histograms can be used with ordinal data; however, the ordered nature of the data must be preserved in the bins of the histogram, and often a bar chart is clearer.
 
 \item Is there a greater trend to need an increase in the availability of bicycles?
-Plotting the weekdays against the increase stock feature shows an increase in demand for bicycles during the rush-hour windows six to nine in the morning and three to seven in the afternoon. This is illustrated in figure \ref{fig:}
-    \end{enumerate}
+\begin{enumerate}
+\item Can any trend be seen comparing different hours, weeks, and months?
+\item Is there any difference between weekdays and holidays?
+Plotting the hours of the day during weekdays against the increase stock feature shows an increase in demand for bicycles during the rush-hour windows six to nine in the morning and three to seven in the afternoon. This is illustrated in figure \ref{fig:weekday_increase_stock}.
 
-\subsection{Headings: second level}
+\begin{figure}[htb!]
+\caption{Days hours and weekdays.}
+\label{fig:H}
+\subfloat[\label{fig:weekday_increase_stock}Increase stock during day hours.]{
+        \includegraphics[width=0.5\textwidth]{Code/Plots/hour_of_day_against_increase_stock_weekday.png}
+   }\hfill
+     \subfloat[\label{fig:week_increase_stock}Increase stock during weekdays.]{
+       \includegraphics[width=0.5\textwidth]{Code/Plots/day_of_week_against_increase_stock.png}
+    }      
+\end{figure}
 
+%\begin{figure}[htb!]
+%\includegraphics[width=12cm]{Code/Plots/hour_of_day_against_increase_stock_weekday.png}
+%\caption{Increase stock during day hours.}
+%\label{fig:weekday_increase_stock}
+%\end{figure}
 
-Second-level headings should be in 10-point type.
+%\begin{figure}[htb!]
+%\includegraphics[width=12cm]{Code/Plots/day_of_week_against_increase_stock.png}
+%\caption{Increase stock during weekdays.}
+%\label{fig:week_increase_stock}
+%\end{figure}
 
-
-\subsubsection{Headings: third level}
-
-
-Third-level headings should be in 10-point type.
-
-
-\paragraph{Paragraphs}
-
-
-There is also a \verb+\paragraph+ command available, which sets the heading in
-bold, flush left, and inline with the text, with the heading followed by 1\,em
-of space.
-
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-
-These instructions apply to everyone.
-
-
-\subsection{Citations within the text}
+Plotting the days of the week against the increase stock feature shows an increase in demand for bicycles during the day '5' (Saturday) and '6' (Sunday) of the week. It can be seen in Figure \ref{fig:week_increase_stock}.
 
 
-The \verb+natbib+ package will be loaded for you by default.  Citations may be
-author/year or numeric, as long as you maintain internal consistency.  As to the
-format of the references themselves, any style is acceptable as long as it is
-used consistently.
+
+Plotting the months in the year against the increase stock feature shows peaks in demand for bicycles during April, June and September. It can be seen in Figure \ref{fig:months_increase_stock}.
+
+\begin{figure}[htb!]
+\caption{Months and holidays.}
+\label{fig:H}
+\subfloat[\label{fig:months_increase_stock}Increase stock during months.]{
+        \includegraphics[width=0.5\textwidth]{Code/Plots/month_against_increase_stock.png}
+   }\hfill
+     \subfloat[\label{fig:holiday_increase_stock}Increase stock during holidays.]{
+       \includegraphics[width=0.5\textwidth]{Code/Plots/holiday_against_increase_stock.png}
+    }      
+\end{figure}
+
+%\begin{figure}[htb!]
+%\includegraphics[width=12cm]{Code/Plots/month_against_increase_stock.png}
+%\caption{Increase stock during months.}
+%\label{fig:months_increase_stock}
+%\end{figure}
+
+%\begin{figure}[htb!]
+%\includegraphics[width=12cm]{Code/Plots/holiday_against_increase_stock.png}
+%\caption{Increase stock during holidays.}
+%\label{fig:holiday_increase_stock}
+%\end{figure}
+
+It can be seen the trend when it is weekdays and holidays in Figure \ref{fig:holiday_increase_stock}. The '0' represent the weekdays and the '1' represent the holidays. The higher demand increased in weekdays compared with the holidays.
 
 
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations appropriate for
-use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
+\item Is there any trend depending on the weather? Rainy days, snowy days, etc.
+As expected, there is higher demand when there is not snow, when it snows low demand increases. It can be seen in Figure \ref{fig:snow}. The summertime influences in the bike demand, the higher demand occurs during summer time and it can be seen in Figure \ref{fig:snow}.
 
-
-If you wish to load the \verb+natbib+ package with options, you may add the
-following before loading the \verb+neurips_2022+ package:
-\begin{verbatim}
-   \PassOptionsToPackage{options}{natbib}
-\end{verbatim}
-
-
-If \verb+natbib+ clashes with another package you load, you can add the optional
-argument \verb+nonatbib+ when loading the style file:
-\begin{verbatim}
-   \usepackage[nonatbib]{neurips_2022}
-\end{verbatim}
-
-
-As submission is double blind, refer to your own published work in the third
-person. That is, use ``In the previous work of Jones et al.\ [4],'' not ``In our
-previous work [4].'' If you cite your other papers that are not widely available
-(e.g., a journal paper under review), use anonymous author names in the
-citation, e.g., an author of the form ``A.\ Anonymous.''
-
-
-\subsection{Footnotes}
-
-
-Footnotes should be used sparingly.  If you do require a footnote, indicate
-footnotes with a number\footnote{Sample of the first footnote.} in the
-text. Place the footnotes at the bottom of the page on which they appear.
-Precede the footnote with a horizontal rule of 2~inches (12~picas).
-
-
-Note that footnotes are properly typeset \emph{after} punctuation
-marks.\footnote{As in this example.}
-
-
-\subsection{Figures}
-
-
-\begin{figure}
-  \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
+\begin{figure}[htb!]
+\caption{Months and holidays.}
+\label{fig:H}
+\subfloat[\label{fig:snow}Increase stock during snow weather.]{
+        \includegraphics[width=0.5\textwidth]{Code/Plots/snow.png}
+   }\hfill
+     \subfloat[\label{fig:summertime}Increase stock during summertime.]{
+       \includegraphics[width=0.5\textwidth]{Code/Plots/summertime.png}
+    }      
 \end{figure}
 
 
-All artwork must be neat, clean, and legible. Lines should be dark enough for
-purposes of reproduction. The figure number and caption always appear after the
-figure. Place one line space before the figure caption and one line space after
-the figure. The figure caption should be lower case (except for first word and
-proper nouns); figures are numbered consecutively.
+
+\end{enumerate}
+
+\end{enumerate}
+\subsection{Treating the Data}
+
+Data set analysis was explored based on the provided inputs. It was possible to conclude that by removing some data from the given input the accuracy of the models can be increased. This happens because certain data does not have as much correlation with the output, so the results may differ. Therefore, the following data was removed from the inputs to obtain better results:
+
+\begin{equation}
+RemovedInputs = visibility, snowdepth, precip
+\end{equation}
+
+The provided input data was divided into training data, testing data and validation data applied to all implemented models. The training data is 75\%, the test data is 15\% and the validation data is 15\%, of the total amount of the input data (1600 data points). It is important to mentioned that the inputs was re-scaled in order to apply in the methods to do the prediction.
 
 
-You may use color figures.  However, it is best for the figure captions and the
-paper body to be legible if the paper is printed in either black/white or in
-color.
+\section{Predictions}
+Throughout the project, we experimented with different model families to figure out which one would best suit the problem at hand. This section gives a brief overview of the model families we experimented with and lastly presents which one we decided as the most suitable prediction to the given problem. The follows models was analysed: Logistic Regression, Discriminant analysis (LDA and QDA), K-nearest neighbor, Tree-based methods (classification trees, random forests, bagging) and Boosting (adaptative and gradient).
 
 
-\subsection{Tables}
+\subsection{Logistic Regression}
+
+Logistic Regression  modelling conditional class probabilities. It is a model for classification whose decision boundaries are linear. The given prediction has been made for binary classification. An analysis was made in order to choose the appropriate decision threshold "r" to minimises the so-called misclassification rate for the given application. The analysis was made considering the accuracy and the confusion matrix focusing in improve the model. It is possible to see in Figure \ref{fig:thresholds_versus_accuracy} the different accuracy values found when the decision threshold "r" is chosen in the [0,1] interval.
+
+% \begin{figure}[htb!]
+% \includegraphics[width=12cm]{...}
+% \caption{Analysis of the appropriate decision threshold "r".}
+% \label{fig:thresholds_versus_accuracy}
+% \end{figure}
+
+The Confusion matrix can be seen in Figure \ref{fig:cmlg}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Report/Images/confusion_matrix_marina_regression.png}
+    \caption{Confusion matrix - Logistic Regression}
+    \label{fig:cmlg}
+\end{figure}
 
 
-All tables must be centered, neat, clean and legible.  The table number and
-title always appear before the table.  See Table~\ref{sample-table}.
+\subsection{Discriminant Analysis (LDA and QDA)}
+
+Linear Discriminant Analysis (LDA) is a linear model for classification. It treats training data as though observations of each class are samples from a multidimensional normal distribution. The decision boundary is exactly at the point where the probabilities of each of the classes are equal. LDA is a special case of Discriminant analysis where the covariance matrices of each of the distributions are assumed to be the same.
+
+%When learning a classifier using LDA, a set of three parameters have to be learned, for each of the classes in the data.
+%The parameters to be learned for all classes \(1, 2, ..., \boldsymbol{M}\) are the following
+
+%\begin{equation}
+%\theta = \left\{ \boldsymbol{\mu}_m, \boldsymbol{\Sigma}_m, \pi_m \right\}_{m=1}^M
+%\end{equation}
+
+%Where \(\boldsymbol{\mu}_m, \boldsymbol{\Sigma}_m, \pi_m\) is the class-dependent mean vector, covariance matrix, and prior probability of class \(\boldsymbol{m}\), respectively.
+
+%The parameters are learned by maximizing the log-likelihood of the training data
+
+%\begin{equation}
+%\boldsymbol{\hat{\theta}} = \arg\max_{\theta} \ln p(\{\boldsymbol{x}_i,y_i\}_{i=1}^n | \boldsymbol{\theta}).
+%\end{equation}
+
+%where \(\{\boldsymbol{x}_i,y_i\}_{i=1}^n\) is the training data.
+
+%The predictions are then made by selecting the class that is most probable
+
+%\begin{equation}
+%\hat{y}_* = \arg\max_m p(y = m | \boldsymbol{x}_*)
+%\end{equation}
+
+%Where \(p\) is a multivariate normal distribution based on the previously learned parameters.
+
+%LDA was one of the models we explored when experimenting with different model families for the problem at hand. The code written can be found in the appendix TODO REFER TO APPENDIX.
+
+%a) TODO
+
+%b) TODO
+
+%c) TODO
+
+\subsection{K-nearest neighbor}
+
+The K-nearest neighbor prediction method is an update of the 1-nearest neighbour method.
+
+The Confusion matrix can be seen in Figure \ref{fig:cmkn}.
 
 
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
+\begin{figure}[H]
+		\centering
+		\caption{Confusion matrix - K-nearest neighbor.}		\includegraphics[width=0.5\linewidth]{Report/Images/confusion_matrix_renan_knn.png}
+	\label{fig:cmkn}
+	\end{figure}
+
+\subsection{Comparison between all implement methods}
+
+%%fazer tabela
 
 
-Note that publication-quality tables \emph{do not contain vertical rules.} We
-strongly suggest the use of the \verb+booktabs+ package, which allows for
-typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
-
-
-\begin{table}
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-\section{Final instructions}
-
-
-Do not change any aspects of the formatting parameters in the style files.  In
-particular, do not modify the width or length of the rectangle the text should
-fit into, and do not change font sizes (except perhaps in the
-\textbf{References} section; see below). Please note that pages should be
-numbered.
-
-
-\section{Preparing PDF files}
-
-
-Please prepare submission files with paper size ``US Letter,'' and not, for
-example, ``A4.''
-
-
-Fonts were the main cause of problems in the past years. Your PDF file must only
-contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
-achieve this.
-
-
-\begin{itemize}
-
-
-\item You should directly generate PDF files using \verb+pdflatex+.
-
-
-\item You can check which fonts a PDF files uses.  In Acrobat Reader, select the
-  menu Files$>$Document Properties$>$Fonts and select Show All Fonts. You can
-  also use the program \verb+pdffonts+ which comes with \verb+xpdf+ and is
-  available out-of-the-box on most Linux machines.
-
-
-\item The IEEE has recommendations for generating PDF files whose fonts are also
-  acceptable for NeurIPS. Please see
-  \url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
-
-
-\item \verb+xfig+ "patterned" shapes are implemented with bitmap fonts.  Use
-  "solid" shapes instead.
-
-
-\item The \verb+\bbold+ package almost always uses bitmap fonts.  You should use
-  the equivalent AMS Fonts:
-\begin{verbatim}
-   \usepackage{amsfonts}
-\end{verbatim}
-followed by, e.g., \verb+\mathbb{R}+, \verb+\mathbb{N}+, or \verb+\mathbb{C}+
-for $\mathbb{R}$, $\mathbb{N}$ or $\mathbb{C}$.  You can also use the following
-workaround for reals, natural and complex:
-\begin{verbatim}
-   \newcommand{\RR}{I\!\!R} %real numbers
-   \newcommand{\Nat}{I\!\!N} %natural numbers
-   \newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-Note that \verb+amsfonts+ is automatically loaded by the \verb+amssymb+ package.
-
-
-\end{itemize}
-
-
-If your file contains type 3 fonts or non embedded TrueType fonts, we will ask
-you to fix it.
-
-
-\subsection{Margins in \LaTeX{}}
-
-
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+ from the \verb+graphicx+ package. Always specify the
-figure width as a multiple of the line width as in the example below:
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]{myfile.pdf}
-\end{verbatim}
-See Section 4.4 in the graphics bundle documentation
-(\url{http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf})
-
-
-A number of width problems arise when \LaTeX{} cannot properly hyphenate a
-line. Please give LaTeX hyphenation hints using the \verb+\-+ command when
-necessary.
-
-
-\begin{ack}
-Use unnumbered first level headings for the acknowledgments. All acknowledgments
-go at the end of the paper before the list of references. Moreover, you are required to declare
-funding (financial activities supporting the submitted work) and competing interests (related financial activities outside the submitted work).
-More information about this disclosure can be found at: \url{https://neurips.cc/Conferences/2022/PaperInformation/FundingDisclosure}.
-
-
-Do {\bf not} include this section in the anonymized submission, only in the final paper. You can use the \texttt{ack} environment provided in the style file to autmoatically hide this section in the anonymized submission.
-\end{ack}
-
+\section{Conclusion}
 
 \section*{References}
 
@@ -493,93 +449,6 @@ hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Checklist}
-
-
-%%% BEGIN INSTRUCTIONS %%%
-The checklist follows the references.  Please
-read the checklist guidelines carefully for information on how to answer these
-questions.  For each question, change the default \answerTODO{} to \answerYes{},
-\answerNo{}, or \answerNA{}.  You are strongly encouraged to include a {\bf
-justification to your answer}, either by referencing the appropriate section of
-your paper or providing a brief inline description.  For example:
-\begin{itemize}
-  \item Did you include the license to the code and datasets? \answerYes{See Section~\ref{gen_inst}.}
-  \item Did you include the license to the code and datasets? \answerNo{The code and the data are proprietary.}
-  \item Did you include the license to the code and datasets? \answerNA{}
-\end{itemize}
-Please do not modify the questions and only use the provided macros for your
-answers.  Note that the Checklist section does not count towards the page
-limit.  In your paper, please delete this instructions block and only keep the
-Checklist section heading above along with the questions/answers below.
-%%% END INSTRUCTIONS %%%
-
-
-\begin{enumerate}
-
-
-\item For all authors...
-\begin{enumerate}
-  \item Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
-    \answerTODO{}
-  \item Did you describe the limitations of your work?
-    \answerTODO{}
-  \item Did you discuss any potential negative societal impacts of your work?
-    \answerTODO{}
-  \item Have you read the ethics review guidelines and ensured that your paper conforms to them?
-    \answerTODO{}
-\end{enumerate}
-
-
-\item If you are including theoretical results...
-\begin{enumerate}
-  \item Did you state the full set of assumptions of all theoretical results?
-    \answerTODO{}
-        \item Did you include complete proofs of all theoretical results?
-    \answerTODO{}
-\end{enumerate}
-
-
-\item If you ran experiments...
-\begin{enumerate}
-  \item Did you include the code, data, and instructions needed to reproduce the main experimental results (either in the supplemental material or as a URL)?
-    \answerTODO{}
-  \item Did you specify all the training details (e.g., data splits, hyperparameters, how they were chosen)?
-    \answerTODO{}
-        \item Did you report error bars (e.g., with respect to the random seed after running experiments multiple times)?
-    \answerTODO{}
-        \item Did you include the total amount of compute and the type of resources used (e.g., type of GPUs, internal cluster, or cloud provider)?
-    \answerTODO{}
-\end{enumerate}
-
-
-\item If you are using existing assets (e.g., code, data, models) or curating/releasing new assets...
-\begin{enumerate}
-  \item If your work uses existing assets, did you cite the creators?
-    \answerTODO{}
-  \item Did you mention the license of the assets?
-    \answerTODO{}
-  \item Did you include any new assets either in the supplemental material or as a URL?
-    \answerTODO{}
-  \item Did you discuss whether and how consent was obtained from people whose data you're using/curating?
-    \answerTODO{}
-  \item Did you discuss whether the data you are using/curating contains personally identifiable information or offensive content?
-    \answerTODO{}
-\end{enumerate}
-
-
-\item If you used crowdsourcing or conducted research with human subjects...
-\begin{enumerate}
-  \item Did you include the full text of instructions given to participants and screenshots, if applicable?
-    \answerTODO{}
-  \item Did you describe any potential participant risks, with links to Institutional Review Board (IRB) approvals, if applicable?
-    \answerTODO{}
-  \item Did you include the estimated hourly wage paid to participants and the total amount spent on participant compensation?
-    \answerTODO{}
-\end{enumerate}
-
-
-\end{enumerate}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
